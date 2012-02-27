@@ -1,6 +1,13 @@
 module FlashDevelop
   class Scope
-    def initialize
+
+    # Buffer path, relative to the project path
+    def path
+      $curbuf.name.gsub("#{VIM::pwd}/", '')
+    end
+
+    def test?(test_path)
+      File.basename(path).match(/Test\.as$/) && !path.index(/#{test_path}\//).nil?
     end
 
     def package
@@ -15,5 +22,6 @@ module FlashDevelop
       end
       pkg
     end
+
   end
 end

@@ -2,7 +2,7 @@ require File.expand_path('spec/spec_helper')
 
 describe FlashDevelop::Project do
   context "converting as3proj to sprouts" do
-    subject {FlashDevelop::Project.new}
+    subject { FlashDevelop::Project.new }
 
     it 'should get mxmlc options' do
       options = subject.parse_as3proj("spec/fixtures/sample-project/rufus.as3proj")

@@ -23,26 +23,46 @@ if !has("ruby")
   finish
 endif
 
-command FlashDevelopAutoComplete call <SID>FlashDevelopTryAutocomplete()
-command FlashDevelopConvertProject call <SID>FlashDevelopConvertProject()
+function s:FlashDevelopRefreshBuffer()
+  command -buffer FlashDevelopAutoComplete call <SID>FlashDevelopTryAutocomplete()
+  command -buffer FlashDevelopConvertProject call <SID>FlashDevelopConvertProject()
+  command -buffer R call <SID>FlashDevelopOpenRelated()
+endfunction
 
 function s:FlashDevelopTryAutocomplete()
   ruby $flash_develop.autocomplete
 endfunction
 
-function FlashDevelopConvertProject()
+function s:FlashDevelopConvertProject()
   ruby $flash_develop.convert_flash_develop_project
 endfunction
 
-silent! nnoremap <unique> <silent> <Leader>m :FlashDevelopAutoComplete<CR>
+function s:FlashDevelopOpenRelated()
+  ruby $flash_develop.open_related
+endfunction
 
 augroup flashdevelop
   autocmd FileType actionscript compiler sprouts
+  autocmd FileType actionscript call s:FlashDevelopRefreshBuffer()
   autocmd BufWritePre *.as3proj :FlashDevelopConvertProject
 augroup END
 
 ruby << EOF
-$: << '../ruby'
-require 'flash_develop'
-$flash_develop = FlashDevelop::FlashDevelop.new
+  begin
+    # prepare controller
+    puts "Will require..."
+    require 'flash_develop'
+    puts "Required... Will instantiate"
+    $flash_develop = FlashDevelop::Controller.new
+  rescue LoadError
+    load_path_modified = false
+    ::VIM::evaluate('&runtimepath').to_s.split(',').each do |path|
+      lib = "#{path}/ruby"
+      if !$LOAD_PATH.include?(lib) and File.exist?(lib)
+        $LOAD_PATH << lib
+        load_path_modified = true
+      end
+    end
+    retry if load_path_modified
+  end
 EOF

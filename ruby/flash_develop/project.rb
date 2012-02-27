@@ -5,6 +5,7 @@ module FlashDevelop
     attr_reader :class_name, 
                 :bin_path,
                 :src_path,
+                :test_path,
                 :doc_path,
                 :debug_swf_name,
                 :test_swf_name,
@@ -14,6 +15,7 @@ module FlashDevelop
       @doc_path = 'doc'
       @bin_path = 'bin'
       @src_path = 'src'
+      @test_path = 'test'
       @debug_swf_name = 'debug.swf'
       @test_swf_name = 'test.swf'
       @test_runner_name = 'test_runner.swf'

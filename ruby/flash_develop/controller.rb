@@ -1,29 +1,15 @@
-# 
 # FlashDevelop VIM Plugin
 # -----------------------
 # http://endel.github.com/flashdevelop.vim/
 # by Endel Dreyer
 #
 
-require 'rubygems'
-require 'bundler'
-require 'bundler/setup'
-
-require 'rake/clean'
-require 'flashsdk'
-require 'asunit4'
-
-require 'nokogiri'
-
-
-$fd = 1
 module FlashDevelop
   class Controller
-    attr_reader :project, :generator
+    attr_reader :project, :current_scope
 
     def initialize
       @project = Project.new
-      @generator = Generator.new
       @current_scope = Scope.new
     end
 
@@ -31,19 +17,32 @@ module FlashDevelop
       @project.flash_develop_to_sprouts!(VIM::pwd)
     end
 
+    def open_related
+      if @current_scope.test?(@project.test_path)
+        VIM::open @current_scope.path.gsub(@project.test_path, @project.src_path).gsub(/Test\.as$/, ".as")
+      else
+        VIM::open @current_scope.path.gsub(@project.src_path, @project.test_path).gsub(/\.as$/, "Test.as")
+      end
+    end
+
+    # Makes magic, try to discover what to autocomplete, and boom!
     def autocomplete
       statement = Statement.new(VIM::cursor_word)
 
       if statement.class?
-        package = @scope.package(statement)
-        package += ((package.index('.')) ? "." : '') + statement.word
-        full_class_path = VIM::input("Generate new class under: ", package)
-        generate_class(full_class_path)
+        package = @current_scope.package
+        package += (!package.empty? ? "." : '') + statement.word
+        full_class_path = VIM::input("New class: ", package)
+
+        # User skipped
+        return if full_class_path.empty?
+
+        # Open generated class
+        VIM::open(generate_class(full_class_path))
       elsif statement.const?
 
         # If statement doesn't exists, try to create it
         unless VIM::Tag::exists?(current_word)
-
         end
       end
     end
@@ -54,10 +53,16 @@ module FlashDevelop
     end
 
     protected
-      # Generators
+      # Generate class
+      # @example Generating a class
+      # self.generate_class('com.util.Math') => "src/com/util/Math.as"
+      #
+      #
+      # @param [String] full_class_path
+      # @return [String] class_file_path
       def generate_class(full_class_path)
         VIM::command("!sprout-class #{full_class_path}" )
-        VIM::command("open #{@project.src_path}/#{full_class_path.gsub('.', '/')}" )
+        "#{@project.src_path}/#{full_class_path.gsub('.', '/')}.as"
       end
 
       def generate_test
