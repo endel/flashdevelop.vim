@@ -41,6 +41,8 @@ function s:FlashDevelopOpenRelated()
   ruby $flash_develop.open_related
 endfunction
 
+silent! nnoremap <unique> <silent> <Leader>m :FlashDevelopAutoComplete<CR>
+
 augroup flashdevelop
   autocmd FileType actionscript compiler sprouts
   autocmd FileType actionscript call s:FlashDevelopRefreshBuffer()
@@ -50,9 +52,7 @@ augroup END
 ruby << EOF
   begin
     # prepare controller
-    puts "Will require..."
     require 'flash_develop'
-    puts "Required... Will instantiate"
     $flash_develop = FlashDevelop::Controller.new
   rescue LoadError
     load_path_modified = false
