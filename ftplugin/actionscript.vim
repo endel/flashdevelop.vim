@@ -25,6 +25,7 @@ endif
 
 function s:FlashDevelopRefreshBuffer()
   command -buffer FlashDevelopAutoComplete call <SID>FlashDevelopTryAutocomplete()
+  command -buffer FlashDevelopNewClass call <SID>FlashDevelopCreateNewClass()
   command -buffer FlashDevelopConvertProject call <SID>FlashDevelopConvertProject()
   command -buffer R call <SID>FlashDevelopOpenRelated()
 endfunction
@@ -37,11 +38,16 @@ function s:FlashDevelopConvertProject()
   ruby $flash_develop.convert_flash_develop_project
 endfunction
 
+function s:FlashDevelopCreateNewClass()
+  ruby $flash_develop.create_new_class
+endfunction
+
 function s:FlashDevelopOpenRelated()
   ruby $flash_develop.open_related
 endfunction
 
 silent! nnoremap <unique> <silent> <Leader>m :FlashDevelopAutoComplete<CR>
+silent! nnoremap <unique> <silent> <Leader>N :FlashDevelopNewClass<CR>
 
 augroup flashdevelop
   autocmd FileType actionscript compiler sprouts

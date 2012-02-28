@@ -32,19 +32,23 @@ module FlashDevelop
       if statement.class?
         package = @current_scope.package
         package += (!package.empty? ? "." : '') + statement.word
-        full_class_path = VIM::input("New class: ", package)
-
-        # User skipped
-        return if full_class_path.empty?
-
-        # Open generated class
-        VIM::open(generate_class(full_class_path))
+        create_new_class(package)
       elsif statement.const?
 
         # If statement doesn't exists, try to create it
         unless VIM::Tag::exists?(current_word)
         end
       end
+    end
+
+    def create_new_class(package="")
+      full_class_path = VIM::input("New class (full package path): ", package)
+
+      # User skipped
+      return if full_class_path.empty?
+
+      # Open generated class
+      VIM::open(generate_class(full_class_path))
     end
 
     def setup_compiler!
