@@ -30,28 +30,30 @@ function s:FlashDevelopRefreshBuffer()
   command -buffer R call <SID>FlashDevelopOpenRelated()
 endfunction
 
-function s:FlashDevelopTryAutocomplete()
+function b:FlashDevelopTryAutocomplete()
   ruby $flash_develop.autocomplete
 endfunction
 
-function s:FlashDevelopConvertProject()
+function b:FlashDevelopConvertProject()
   ruby $flash_develop.convert_flash_develop_project
 endfunction
 
-function s:FlashDevelopCreateNewClass()
+function b:FlashDevelopCreateNewClass()
   ruby $flash_develop.create_new_class
 endfunction
 
-function s:FlashDevelopOpenRelated()
+function b:FlashDevelopOpenRelated()
   ruby $flash_develop.open_related
 endfunction
 
 silent! nnoremap <unique> <silent> <Leader>m :FlashDevelopAutoComplete<CR>
 silent! nnoremap <unique> <silent> <Leader>N :FlashDevelopNewClass<CR>
 
+inoremap <expr><C-m> b:FlashDevelopTryAutocomplete()<CR>
+
 augroup flashdevelop
   autocmd FileType actionscript compiler sprouts
-  autocmd FileType actionscript call s:FlashDevelopRefreshBuffer()
+  autocmd FileType actionscript call b:FlashDevelopRefreshBuffer()
   autocmd BufWritePre *.as3proj :FlashDevelopConvertProject
 augroup END
 

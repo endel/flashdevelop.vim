@@ -6,7 +6,7 @@ module FlashDevelop
       $curbuf.name.gsub("#{VIM::pwd}/", '')
     end
 
-    def test?(test_path)
+    def test_file?(test_path)
       File.basename(path).match(/Test\.as$/) && !path.index(/#{test_path}\//).nil?
     end
 

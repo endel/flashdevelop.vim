@@ -20,19 +20,17 @@ begin
   require 'asunit4'
 
   # FlashDevelop
-  puts 'flash_develop/controller'
   require 'flash_develop/controller'
-  puts 'flash_develop/scope'
   require 'flash_develop/scope'
-  puts 'flash_develop/project'
   require 'flash_develop/project'
-  puts 'flash_develop/statement'
-  require 'flash_develop/statement'
+
+  # Lexic / Parser
+  require 'flash_develop/lex/word'
+  require 'flash_develop/lex/statement'
+  require 'flash_develop/lex/sentence'
 
   # VIM
-  puts 'flash_develop/vim/tag'
   require 'flash_develop/vim/tag'
-  puts 'flash_develop/vim/vim'
   require 'flash_develop/vim/vim'
 rescue => e
   puts e.inspect

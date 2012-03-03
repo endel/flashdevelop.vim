@@ -18,20 +18,29 @@ module FlashDevelop
     end
 
     def open_related
-      if @current_scope.test?(@project.test_path)
-        VIM::open @current_scope.path.gsub(@project.test_path, @project.src_path).gsub(/Test\.as$/, ".as")
+      is_test_file = @current_scope.test_file?(@project.test_path)
+      from_path = (is_test_file) ? @project.test_path : @project.src_path
+      to_path = (is_test_file) ? @project.src_path : @project.test_path
+
+      # File patterns
+      from_extension = (is_test_file) ? /Test\.as$/ : /\.as$/
+      to_extension = (is_test_file) ? ".as" : "Test.as"
+
+      target_file = @current_scope.path.gsub(from_path, to_path).gsub(from_extension, to_extension)
+      if VIM::file_readable?(target_file)
+        VIM::open target_file
       else
-        VIM::open @current_scope.path.gsub(@project.src_path, @project.test_path).gsub(/\.as$/, "Test.as")
+        VIM::echoerr "File '#{target_file}' not found."
       end
     end
 
     # Makes magic, try to discover what to autocomplete, and boom!
     def autocomplete
-      statement = Statement.new(VIM::cursor_word)
+      statement = Statement.new(VIM::cursor_word, VIM::cursor_sentence)
 
-      if statement.class?
+      if statement.cursor.class?
         package = @current_scope.package
-        package += (!package.empty? ? "." : '') + statement.word
+        package += (!package.empty? ? "." : '') + statement.cursor
         create_new_class(package)
       elsif statement.const?
 
