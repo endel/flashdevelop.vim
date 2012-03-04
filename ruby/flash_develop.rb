@@ -11,18 +11,15 @@ begin
   require 'bundler'
   Bundler.setup
 
-  #require 'nokogiri'
-
   # flashsdk
-  puts 'flashsdk'
   require 'flashsdk'
-  puts 'asunit4'
   require 'asunit4'
 
   # FlashDevelop
   require 'flash_develop/controller'
   require 'flash_develop/scope'
   require 'flash_develop/project'
+  require 'flash_develop/tags'
 
   # Lexic / Parser
   require 'flash_develop/lex/word'
@@ -30,7 +27,6 @@ begin
   require 'flash_develop/lex/sentence'
 
   # VIM
-  require 'flash_develop/vim/tag'
   require 'flash_develop/vim/vim'
 rescue => e
   puts e.inspect

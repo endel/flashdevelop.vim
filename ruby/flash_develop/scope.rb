@@ -6,6 +6,26 @@ module FlashDevelop
       $curbuf.name.gsub("#{VIM::pwd}/", '')
     end
 
+    def imports
+      imports = []
+
+      currline = 1
+      total_lines = $curbuf.count
+      while currline < total_lines
+        buff_line = $curbuf[currline]
+
+        # Stop searching if class or interface was found
+        break if buff_line.index(/class[^A-Z]*[a-zA-Z0-9_]+/) || buff_line.index(/interface[^A-Z]*[a-zA-Z0-9_]+/)
+
+        if matches = buff_line.match(/import ([^;]*)/)
+          imports << matches[1].strip
+        end
+        currline += 1
+      end
+
+      imports
+    end
+
     def test_file?(test_path)
       File.basename(path).match(/Test\.as$/) && !path.index(/#{test_path}\//).nil?
     end

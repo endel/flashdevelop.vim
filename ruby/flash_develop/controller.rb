@@ -42,10 +42,11 @@ module FlashDevelop
         package = @current_scope.package
         package += (!package.empty? ? "." : '') + statement.cursor
         create_new_class(package)
-      elsif statement.const?
+
+      elsif statement.cursor.const?
 
         # If statement doesn't exists, try to create it
-        unless VIM::Tag::exists?(current_word)
+        unless VIM::Tag::exists?(statement.cursor)
         end
       end
     end
