@@ -6,6 +6,13 @@ module FlashDevelop
       $curbuf.name.gsub("#{VIM::pwd}/", '')
     end
 
+    def package_imported?(full_package_path)
+      imports = self.imports
+      (imports.include?(full_package_path) || 
+        (package_wildcard = full_package_path.match(/(.*)[\.]\w*$/)[1] + ".*") &&
+         imports.include?(package_wildcard))
+    end
+
     def imports
       imports = []
 
