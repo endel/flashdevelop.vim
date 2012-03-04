@@ -84,6 +84,11 @@ module FlashDevelop
 
     def parse_as3proj(as3proj_file)
       @build_options = {}
+
+      #
+      # NOTE:
+      # Can't use Nokogiri inside VIM. Need to try a native XML parsing library.
+      #
       as3proj = Nokogiri::XML(open( as3proj_file ))
 
       output_name = File.basename(as3proj.css('output > movie[path]').attr('path').value.gsub('\\', '/'), '.swf')

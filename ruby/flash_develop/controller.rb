@@ -39,14 +39,24 @@ module FlashDevelop
       statement = Statement.new(VIM::cursor_word, VIM::cursor_sentence)
 
       if statement.cursor.class?
-        package = @current_scope.package
-        package += (!package.empty? ? "." : '') + statement.cursor
-        create_new_class(package)
+        tag = Tags.klass(statement.cursor)
+        unless tag
+          # Try to create class if it doesn't exists
+          package = @current_scope.package
+          package += (!package.empty? ? "." : '') + statement.cursor
+          create_new_class(package)
+        else
+          # Try to import class if it isn't present on this scope
+          unless @current_scope.package_imported?(tag.full_package)
+            @current_scope.import!(tag.full_package)
+          end
+        end
 
       elsif statement.cursor.const?
 
         # If statement doesn't exists, try to create it
-        unless VIM::Tag::exists?(statement.cursor)
+        unless Tags.variable(statement.cursor)
+
         end
       end
     end

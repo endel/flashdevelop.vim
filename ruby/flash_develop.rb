@@ -19,7 +19,10 @@ begin
   require 'flash_develop/controller'
   require 'flash_develop/scope'
   require 'flash_develop/project'
-  require 'flash_develop/tags'
+
+  # Tags
+  require 'flash_develop/tags/tags.rb'
+  require 'flash_develop/tags/tag.rb'
 
   # Lexic / Parser
   require 'flash_develop/lex/word'
