@@ -53,16 +53,15 @@ module FlashDevelop
         end
 
       elsif statement.cursor.const?
-        tag = Tags.variable(statement.cursor)
-
         # If statement doesn't exists, try to create it
-        unless tag
-
+        unless Tags.variable(statement.cursor, @current_scope.path)
+          access_level_selected = self.ask_access_level("Define constant '#{statement.cursor}' with access level:")
         end
-      elsif statement.sentence.method?
+      elsif (statement.sentence.function? && !Tags.function(statement.cursor, @current_scope.path))
+        # Show options to generate a function if isn't defined on current scope
 
       elsif statement.cursor == "override"
-        # Show parent class method list, for override
+        # Show parent class function list, to select for override
       end
     end
 
@@ -100,6 +99,15 @@ module FlashDevelop
 
       def generate_suite
 
+      end
+
+      def ask_access_level(question)
+        access_levels = {
+          1 => 'public',
+          2 => 'private',
+          3 => 'protected'
+        }
+        access_levels[VIM::input_list(question, access_levels.values)]
       end
   end
 end

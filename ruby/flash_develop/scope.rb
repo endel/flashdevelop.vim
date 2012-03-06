@@ -2,9 +2,13 @@ module FlashDevelop
   class Scope
     attr_reader :import_line
 
+    def name
+      $curbuf.name
+    end
+
     # Buffer path, relative to the project path
     def path
-      $curbuf.name.gsub("#{VIM::pwd}/", '')
+      self.name.gsub("#{VIM::pwd}/", '')
     end
 
     def package_imported?(full_package_path)

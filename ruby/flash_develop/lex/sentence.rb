@@ -1,12 +1,12 @@
 module FlashDevelop
   class Sentence < Word
 
-    def method?
+    def function?
       !self.match(/[a-z0-9]\(/).nil?
     end
 
-    def method_name
-      if @word.method?
+    def function_name
+      if @word.function?
         (r = @word.match(/\.([^\(]*)/) and r[1])
       end
     end

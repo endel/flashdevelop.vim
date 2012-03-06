@@ -11,6 +11,12 @@ module VIM
     VIM::evaluate("input(\"#{question}\", \"#{default}\")")
   end
 
+  def self.input_list(question, options)
+    i = -1
+    options = [question, *options]
+    VIM::evaluate("inputlist([#{options.collect {|opt| i+=1; "\"#{(i>0 ? "#{i}: " : '')}#{opt}\""; }.join(',')}])")
+  end
+
   def self.pwd
     VIM::evaluate('getcwd()')
   end
