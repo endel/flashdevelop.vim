@@ -24,10 +24,10 @@ if !has("ruby")
 endif
 
 function s:FlashDevelopRefreshBuffer()
-  command -buffer FlashDevelopAutoComplete call <SID>FlashDevelopTryAutocomplete()
-  command -buffer FlashDevelopNewClass call <SID>FlashDevelopCreateNewClass()
-  command -buffer FlashDevelopConvertProject call <SID>FlashDevelopConvertProject()
-  command -buffer R call <SID>FlashDevelopOpenRelated()
+  command! -buffer FlashDevelopAutoComplete call <SID>FlashDevelopTryAutocomplete()
+  command! -buffer FlashDevelopNewClass call <SID>FlashDevelopCreateNewClass()
+  command! -buffer FlashDevelopConvertProject call <SID>FlashDevelopConvertProject()
+  command! -buffer R call <SID>FlashDevelopOpenRelated()
 endfunction
 
 function s:FlashDevelopTryAutocomplete()

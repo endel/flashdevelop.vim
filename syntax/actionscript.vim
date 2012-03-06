@@ -12,7 +12,7 @@
 " Updated to support new AS 2.0 Flash 8 Language Elements 2005 September 29 (richard@appliedrhetoric.com)
 " Updated to support new AS 3.0 Language Elements 2006 June 20 by Abdul Qabiz (mail at abdulqabiz.com)
 " Updated to remove the check for embedded {} by Ingo Karkat.
-
+" Updated to indent [Embed] properly on next line by Endel Dreyer (endel.dreyer@gmail.com)
 
 " For version 5.x: Clear all syntax items
 " For version 6.x: Quit when a syntax file was already loaded

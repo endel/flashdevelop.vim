@@ -53,11 +53,16 @@ module FlashDevelop
         end
 
       elsif statement.cursor.const?
+        tag = Tags.variable(statement.cursor)
 
         # If statement doesn't exists, try to create it
-        unless Tags.variable(statement.cursor)
+        unless tag
 
         end
+      elsif statement.sentence.method?
+
+      elsif statement.cursor == "override"
+        # Show parent class method list, for override
       end
     end
 

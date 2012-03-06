@@ -30,11 +30,22 @@ describe FlashDevelop::Tags do
     tag.should be_an_instance_of(FlashDevelop::Tag)
     tag.name.should == 'scale'
     tag.variable?.should == true
+
+    # in class
+    tag_in_class = subject.function('save', 'src/org/flixel/plugin/photonstorm/FlxScreenGrab.as')
+    tag_in_class.name.should == 'save'
+    tag_in_class.function?.should == true
+
+    tag_in_class = subject.find('save', 'src/org/flixel/plugin/photonstorm/FlxScreenGrab.as')
+    tag_in_class.name.should == 'save'
+    tag_in_class.function?.should == true
   end
 
   it 'should return nil for invalid tags' do
     tag = subject.variable('SOMETHING_THAT_DOESNT_EXIST')
     tag.should be_nil
+
+    # in class
   end
 
 end
