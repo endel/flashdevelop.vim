@@ -38,7 +38,7 @@ Keyboard bindings
 TODO
 ---
 
-The first goal of flashdevelop.vim is to implement the [FlashDevelop generation features](http://www.flashdevelop.org/wikidocs/index.php?title=Features:Generation). And provide easy to compile
+The first goal of flashdevelop.vim is to implement the [FlashDevelop generation features](http://www.flashdevelop.org/wikidocs/index.php?title=Features:Generation)
 
 
 License
