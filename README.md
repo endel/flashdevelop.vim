@@ -39,3 +39,9 @@ TODO
 ---
 
 The first goal of flashdevelop.vim is to implement the [FlashDevelop generation features](http://www.flashdevelop.org/wikidocs/index.php?title=Features:Generation). And provide easy to compile
+
+
+License
+---
+
+This plugin is distributed under the MIT license. Please see the LICENSE file.
