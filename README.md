@@ -11,6 +11,7 @@ Requirements
 * VIM with ruby bindings. (+ruby)
 * sprout gem (<code>gem install sprout</code>)
 * [vim-rooter](https://github.com/airblade/vim-rooter) plugin
+* [tlib](https://github.com/tomtom/tlib_vim) plugin
 * Custom ctags configuration, as described above.
 
 ctags
@@ -24,15 +25,17 @@ Copy the contents of <code>support/ctags</code> into your ~/.ctags
 Features currently avaible
 ---
 
-  * Compilation through project-sprouts. (:make)
+Commands:
 
-Keyboard bindings
+  * :R - Swap between implementation and test classes.
+  * :make - Compilation through project-sprouts.
+
+Keyboard bindings:
 
   * __Leader + N__ - Create a new class
-  * __Leader + R__ - Swap between implementation and test classes.
   * __Leader + m__ - Autocomplete
     * If cursor inside a class name:
-      * Create a class if it's name isn't defined, otherwise, try to import it.
+      * Create a class if it's name isn't defined, otherwise try to import it.
 
 
 TODO
