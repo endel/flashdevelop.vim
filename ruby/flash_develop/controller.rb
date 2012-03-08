@@ -54,14 +54,16 @@ module FlashDevelop
 
       elsif statement.cursor.const?
         # If statement doesn't exists, try to create it
-        unless Tags.variable(statement.cursor, @current_scope.path)
+        unless Tags.variable(statement.cursor, :file => @current_scope.path)
           access_level_selected = self.ask_access_level("Define constant '#{statement.cursor}' with access level:")
         end
-      elsif (statement.sentence.function? && !Tags.function(statement.cursor, @current_scope.path))
+
+      elsif (statement.sentence.function? && !Tags.function(statement.cursor, :file => @current_scope.path))
         # Show options to generate a function if isn't defined on current scope
 
       elsif statement.cursor == "override"
         # Show parent class function list, to select for override
+
       end
     end
 

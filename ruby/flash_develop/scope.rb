@@ -1,5 +1,6 @@
 module FlashDevelop
   class Scope
+    attr_reader :extends, :implements
     attr_reader :import_line
 
     def name
@@ -38,6 +39,17 @@ module FlashDevelop
 
         # Stop searching if class or interface was found
         if buff_line.index(/class[^A-Z]*[a-zA-Z0-9_]+/) || buff_line.index(/interface[^A-Z]*[a-zA-Z0-9_]+/)
+
+          # Check for inheritance
+          @extends = if match_extends = buff_line.match(/extends[\ ]+([^A-Z]*[a-zA-Z0-9_]+)/)
+                       match_extends[1]
+                     end
+
+          # Check for interface
+          @implements = if match_implements = buff_line.match(/implements[\ ]+([^A-Z]*[a-zA-Z0-9_]+)/)
+                          match_implements[1]
+                        end
+
           @import_line = last_import_line || (currline - 1)
           break
         end

@@ -11,10 +11,12 @@ module VIM
     VIM::evaluate("input(\"#{question}\", \"#{default}\")")
   end
 
-  def self.input_list(question, options)
-    i = -1
-    options = [question, *options]
-    VIM::evaluate("inputlist([#{options.collect {|opt| i+=1; "\"#{(i>0 ? "#{i}: " : '')}#{opt}\""; }.join(',')}])")
+  def self.input_list(question, options, return_type = :si)
+    # s  ... Return one selected element
+    # si ... Return the index of the selected element
+    # m  ... Return a list of selected elements
+    # mi ... Return a list of indexes
+    VIM::evaluate("tlib#input#List('#{return_type}',\"#{question}\", [#{options.collect {|opt| "'#{opt}'" }.join(',')}]) -1")
   end
 
   def self.pwd

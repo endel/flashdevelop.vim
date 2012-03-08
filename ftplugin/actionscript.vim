@@ -23,6 +23,13 @@ if !has("ruby")
   finish
 endif
 
+" Check if 'tlib_vim' is loaded
+try
+	call tlib#input#List('mi', '', [])
+catch /.*/
+	echoe "you're missing tlib. See install instructions at ".expand('<sfile>:h:h').'/README.rst'
+endtry
+
 function s:FlashDevelopRefreshBuffer()
   command! -buffer FlashDevelopAutoComplete call <SID>FlashDevelopTryAutocomplete()
   command! -buffer FlashDevelopNewClass call <SID>FlashDevelopCreateNewClass()
