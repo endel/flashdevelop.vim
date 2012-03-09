@@ -3,6 +3,10 @@ module VIM
     VIM::evaluate('expand("<cword>")')
   end
 
+  def self.set_cursor_position(x,y)
+    VIM::command("call cursor(#{x}, #{y})")
+  end
+
   def self.cursor_sentence
     VIM::evaluate('expand("<cWORD>")')
   end

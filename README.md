@@ -36,6 +36,8 @@ Keyboard bindings:
   * __Leader + m__ - Autocomplete
     * If cursor inside a class name:
       * Create a class if it's name isn't defined, otherwise try to import it.
+    * If cursor inside 'override' statement:
+      * Show a list of parent class functions, to auto-complete for override.
 
 
 TODO

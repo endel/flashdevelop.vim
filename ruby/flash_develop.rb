@@ -28,6 +28,7 @@ begin
   require 'flash_develop/lex/word'
   require 'flash_develop/lex/statement'
   require 'flash_develop/lex/sentence'
+  require 'flash_develop/parser/package'
 
   # VIM
   require 'flash_develop/vim/vim'

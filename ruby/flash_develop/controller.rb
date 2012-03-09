@@ -47,6 +47,8 @@ module FlashDevelop
           create_new_class(package)
         else
           # Try to import class if it isn't present on this scope
+
+          @current_scope.reindex_headers!
           unless @current_scope.package_imported?(tag.full_package)
             @current_scope.import!(tag.full_package)
           end
@@ -55,16 +57,43 @@ module FlashDevelop
       elsif statement.cursor.const?
         # If statement doesn't exists, try to create it
         unless Tags.variable(statement.cursor, :file => @current_scope.path)
-          access_level_selected = self.ask_access_level("Define constant '#{statement.cursor}' with access level:")
+          if access_level_selected = self.ask_access_level("Define constant '#{statement.cursor}' with access level:")
+
+          end
         end
 
       elsif (statement.sentence.function? && !Tags.function(statement.cursor, :file => @current_scope.path))
         # Show options to generate a function if isn't defined on current scope
+        if access_level_selected = self.ask_access_level("Create function '#{statement.cursor}' with access level:")
+
+        end
 
       elsif statement.cursor == "override"
         # Show parent class function list, to select for override
+        @current_scope.reindex_headers!
+        if @current_scope.extends
+          function_tags = Tags.functions(:full_package => @current_scope.extends)
+          # Ignore constructor method
+          function_tags = function_tags.select {|tag| tag.name != Parser::Package.class_name(@current_scope.extends) }
 
+          tag_selected = if function_tags.length > 1
+                           idx = VIM::input_list("Select a function to override:", function_tags.collect { |tag| "#{tag.name} (#{tag.access_level})" } )
+                           (idx >= 0) ? function_tags[idx] : nil
+                         elsif function_tags.length == 1
+                           function_tags.first
+                         else
+                           VIM::echoerr("Cannot find any function on '#{@current_scope.extends}' to override.")
+                         end
+          if tag_selected
+            $curbuf[@current_scope.cursor[0]] = tag_selected.definition.gsub(/(private|protected|public )/, 'override \1')
+            $curbuf.append(@current_scope.cursor[0], "\t\t}")
+          end
+        else
+          VIM::echoerr("Cannot override a base class.")
+        end
       end
+
+      #puts statement.cursor.inspect
     end
 
     def create_new_class(package="")
