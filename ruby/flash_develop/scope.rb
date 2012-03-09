@@ -1,7 +1,8 @@
 module FlashDevelop
   class Scope
-    attr_reader :extends, :implements, :imports
-    attr_reader :import_line
+    attr_reader :class_name, :class_line
+    attr_reader :extends, :implements
+    attr_reader :imports, :import_line
 
     def name
       $curbuf.name
@@ -62,7 +63,14 @@ module FlashDevelop
         buff_line = $curbuf[currline]
 
         # Stop searching if class or interface was found
-        if buff_line.index(/class[^A-Z]*[a-zA-Z0-9_]+/) || buff_line.index(/interface[^A-Z]*[a-zA-Z0-9_]+/)
+        if (klass = buff_line.match(/class[^A-Z]*([a-zA-Z0-9_]+)/)) || (interface = buff_line.match(/interface[^A-Z]*([a-zA-Z0-9_]+)/))
+          if klass
+            @class_name = klass[1]
+          end
+
+          if interface
+            @class_name = interface[1]
+          end
 
           # Check for inheritance
           @extends = if match_extends = buff_line.match(/extends[\ ]+([^A-Z]*[a-zA-Z0-9_]+)/)
@@ -76,7 +84,8 @@ module FlashDevelop
                           (implements).index('.') ? implements : "#{self.package}.#{implements}"
                         end
 
-          @import_line = last_import_line || (currline - 1)
+          @class_line = currline
+          @import_line = last_import_line || (@class_line - 1)
           break
         end
 

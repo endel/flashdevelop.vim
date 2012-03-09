@@ -58,7 +58,10 @@ module FlashDevelop
         # If statement doesn't exists, try to create it
         unless Tags.variable(statement.cursor, :file => @current_scope.path)
           if access_level_selected = self.ask_access_level("Define constant '#{statement.cursor}' with access level:")
-
+            @current_scope.reindex_headers!
+            $curbuf.append(@current_scope.class_line, "\t\t#{access_level_selected} static var #{statement.cursor} : String = \"#{statement.cursor.downcase}\";")
+            cursor = @current_scope.cursor
+            VIM::set_cursor_position(cursor[0]+1, cursor[1])
           end
         end
 
