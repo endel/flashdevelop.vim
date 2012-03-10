@@ -36,7 +36,7 @@ module FlashDevelop
 
     # Makes magic, try to discover what to autocomplete, and boom!
     def autocomplete
-      statement = Statement.new(VIM::cursor_word, VIM::cursor_sentence)
+      statement = Statement.new(VIM::cursor_word, VIM::cursor_sentence, VIM::get_line)
 
       if statement.cursor.class?
         tag = Tags.klass(statement.cursor)
@@ -47,7 +47,6 @@ module FlashDevelop
           create_new_class(package)
         else
           # Try to import class if it isn't present on this scope
-
           @current_scope.reindex_headers!
           unless @current_scope.package_imported?(tag.full_package)
             @current_scope.import!(tag.full_package)
@@ -66,16 +65,23 @@ module FlashDevelop
         end
 
       elsif (statement.sentence.function? && !Tags.function(statement.cursor, :file => @current_scope.path))
+
         # Show options to generate a function if isn't defined on current scope
         if access_level_selected = self.ask_access_level("Create function '#{statement.cursor}' with access level:")
-
+          next_function_line = @current_scope.next_function_line(@current_scope.cursor[0])
+          function = statement.function
+          $curbuf.append(next_function_line, "\t\t#{access_level_selected} function #{function[:name]}(#{function[:args]}) : * {")
+          $curbuf.append(next_function_line+1, "\t\t}")
+          $curbuf.append(next_function_line+2, "")
         end
 
       elsif statement.cursor == "override"
         # Show parent class function list, to select for override
         @current_scope.reindex_headers!
+
         if @current_scope.extends
           function_tags = Tags.functions(:full_package => @current_scope.extends)
+
           # Ignore constructor method
           function_tags = function_tags.select {|tag| tag.name != Parser::Package.class_name(@current_scope.extends) }
 
@@ -136,12 +142,8 @@ module FlashDevelop
       end
 
       def ask_access_level(question)
-        access_levels = {
-          1 => 'public',
-          2 => 'private',
-          3 => 'protected'
-        }
-        access_levels[VIM::input_list(question, access_levels.values)]
+        access_levels = ['public', 'private', 'protected']
+        access_levels[VIM::input_list(question, access_levels)]
       end
   end
 end

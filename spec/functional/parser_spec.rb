@@ -1,7 +1,6 @@
 require File.expand_path('spec/spec_helper')
 
 describe FlashDevelop::Parser do
-
   context FlashDevelop::Parser::Package do
     subject {FlashDevelop::Parser::Package}
 

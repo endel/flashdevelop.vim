@@ -11,6 +11,10 @@ module VIM
     VIM::evaluate('expand("<cWORD>")')
   end
 
+  def self.get_line(num='.')
+    VIM::evaluate("getline('#{num}')")
+  end
+
   def self.input(question, default)
     VIM::evaluate("input(\"#{question}\", \"#{default}\")")
   end

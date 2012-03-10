@@ -42,7 +42,7 @@ module FlashDevelop
     def package
       pkg = nil
       currline = 1
-      total_lines = $curbuf.count
+      total_lines = self.total_lines
       while !pkg && currline < total_lines
         if matches = $curbuf[currline].match(/package([^\n^{]*)/)
           pkg = matches[1].strip
@@ -50,6 +50,28 @@ module FlashDevelop
         currline += 1
       end
       pkg
+    end
+
+    def total_lines
+      $curbuf.count
+    end
+
+    def next_function_line(from_line=1)
+      total_lines = self.total_lines
+
+      #
+      # Improvement needed.
+      #
+      next_function_line = total_lines - 3
+      while from_line < total_lines
+        from_line += 1
+        if ($curbuf[from_line].index(Tags::FUNCTION_REGEXP))
+          next_function_line = from_line - 1
+          break
+        end
+      end
+
+      next_function_line
     end
 
     def reindex_headers!

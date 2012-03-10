@@ -40,6 +40,10 @@ Keyboard bindings:
       * Show a list of parent class functions, to auto-complete for override.
     * If cursor inside a uppercased word:
       * Ask for access level to create a constant. (<code>private static var CONST : String = "const";</code>)
+    * If inside a method call, that was not defined yet:
+      * Ask for access level and create that method.
+
+  The auto-complete functionality deeply uses <code>tags</code> file generated with exuberant-ctags. It's important to always have your <code>tags</code> updated.
 
 
 TODO

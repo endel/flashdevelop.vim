@@ -35,8 +35,9 @@ describe 'Lexic' do
   context FlashDevelop::Statement do
     subject {FlashDevelop::Statement}
 
-    it "should identify classes" do
-      puts FlashDevelop::Statement.new("MyClass", "MyClass()").inspect
+    it "should identify functions and it's arguments" do
+      statement = subject.new("functionName", "instance.functionName(firstArg,", "\t\tsomething.functionName(hello, other);")
+      statement.function.should == {:name => 'functionName', :args => 'hello, other'}
     end
   end
 
@@ -44,7 +45,7 @@ describe 'Lexic' do
 
   end
 
-  context FlashDevelop::Word do 
+  context FlashDevelop::Word do
 
   end
 end

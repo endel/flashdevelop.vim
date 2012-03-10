@@ -2,6 +2,8 @@ require 'singleton'
 
 module FlashDevelop
   class Tags
+    FUNCTION_REGEXP = /^[ \t]*[(private| public|static) ( \t)]*function[ \t]+([A-Za-z0-9_]+)[ \t]*\(/
+
     include Singleton
 
     class << self
@@ -20,7 +22,7 @@ module FlashDevelop
     end
 
     def find(name, options={})
-      return_tag(name, '[cpvf]', options)
+      return_tag(name, options[:type] || '[cpvf]', options)
     end
 
     def klass(name)
