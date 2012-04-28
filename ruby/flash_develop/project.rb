@@ -1,6 +1,7 @@
 require 'erb'
 
 module FlashDevelop
+
   class Project
     attr_reader :class_name, 
                 :bin_path,
@@ -19,21 +20,6 @@ module FlashDevelop
       @debug_swf_name = 'debug.swf'
       @test_swf_name = 'test.swf'
       @test_runner_name = 'test_runner.swf'
-    end
-
-    def flash_develop_to_sprouts!(project_root)
-      File.open('Gemfile', 'w+') {|f| f.write(gemfile_template) } unless File.exists?('Gemfile')
-
-      rakefile = !Dir['rakefile.rb'].first
-      as3proj_file = Dir['*.as3proj'].first
-
-      unless rakefile
-        generate_sprout_files!(projet_root)
-
-        if as3proj_file
-          parse_as3proj(as3proj_file)
-        end
-      end
     end
 
     def build_options= options

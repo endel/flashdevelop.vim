@@ -15,7 +15,6 @@ endif
 
 let &l:makeprg=sproutsCmd
 
-echomsg sproutsCmd
 setlocal errorformat=
             \%-GLoading\ configuration\ file,
             \%E%f(%l):\ \ Error:\ %m,

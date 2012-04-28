@@ -21,33 +21,37 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-begin
-  require 'rubygems'
-  require 'bundler'
-  Bundler.setup
+require 'erb'
+require 'flash_develop/project/parser/fd'
 
-  # flashsdk
-  require 'flashsdk'
-  require 'asunit4'
+module FlashDevelop
+  module Project
+    class Converter
 
-  # FlashDevelop
-  require 'flash_develop/controller'
-  require 'flash_develop/scope'
-  require 'flash_develop/project/converter'
+      def self.check!(project_root)
+        rakefile = !Dir['rakefile.rb'].first
+        as3proj_file = Dir['*.as3proj'].first
 
-  # Tags
-  require 'flash_develop/tags/tags.rb'
-  require 'flash_develop/tags/tag.rb'
+        unless rakefile
+          generate_sprout_files!(projet_root)
+          parse_as3proj(as3proj_file) if as3proj_file
+        end
+      end
 
-  # Lexic / Parser
-  require 'flash_develop/lex/word'
-  require 'flash_develop/lex/statement'
-  require 'flash_develop/lex/sentence'
-  require 'flash_develop/parser/package'
+      def self.identify_project_type(project_root)
+        Parser.constants.each do |parser|
+          klass = Parser.const_get(parser)
 
-  # VIM
-  require 'flash_develop/vim/vim'
-rescue => e
-  puts e.inspect
-  puts e.backtrace
+          if Dir[klass::PATTERN].first
+            # Return project type identified imediately
+            return const.new
+          end
+        end
+
+        # Can't identify project type
+        nil
+      end
+
+    end
+  end
 end
