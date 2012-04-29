@@ -30,10 +30,6 @@ module FlashDevelop
       @current_scope = Scope.new
     end
 
-    def convert_flash_develop_project
-      @project.flash_develop_to_sprouts!(VIM::pwd)
-    end
-
     def open_related
       is_test_file = @current_scope.test_file?(@project.test_path)
       from_path = (is_test_file) ? @project.test_path : @project.src_path
@@ -133,8 +129,8 @@ module FlashDevelop
     end
 
     def setup_compiler!
-      VIM::command("let g:sproutsOptions='#{final_options}'")
-      VIM::command('compiler sprouts')
+      ::VIM::command("let g:sproutsOptions='#{final_options}'")
+      ::VIM::command('compiler sprouts')
     end
 
     protected
@@ -146,7 +142,7 @@ module FlashDevelop
       # @param [String] full_class_path
       # @return [String] class_file_path
       def generate_class(full_class_path)
-        VIM::command("!sprout-class #{full_class_path}" )
+        ::VIM::command("!sprout-class #{full_class_path}" )
         "#{@project.src_path}/#{full_class_path.gsub('.', '/')}.as"
       end
 

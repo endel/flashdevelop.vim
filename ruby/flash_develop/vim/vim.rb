@@ -21,48 +21,51 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-module VIM
-  def self.cursor_word
-    VIM::evaluate('expand("<cword>")')
-  end
+module FlashDevelop
+  module VIM
 
-  def self.set_cursor_position(x,y)
-    VIM::command("call cursor(#{x}, #{y})")
-  end
+    def self.cursor_word
+      ::VIM.evaluate('expand("<cword>")')
+    end
 
-  def self.cursor_sentence
-    VIM::evaluate('expand("<cWORD>")')
-  end
+    def self.set_cursor_position(x,y)
+      ::VIM.command("call cursor(#{x}, #{y})")
+    end
 
-  def self.get_line(num='.')
-    VIM::evaluate("getline('#{num}')")
-  end
+    def self.cursor_sentence
+      ::VIM.evaluate('expand("<cWORD>")')
+    end
 
-  def self.input(question, default)
-    VIM::evaluate("input(\"#{question}\", \"#{default}\")")
-  end
+    def self.get_line(num='.')
+      ::VIM.evaluate("getline('#{num}')")
+    end
 
-  def self.input_list(question, options, return_type = :si)
-    # s  ... Return one selected element
-    # si ... Return the index of the selected element
-    # m  ... Return a list of selected elements
-    # mi ... Return a list of indexes
-    VIM::evaluate("tlib#input#List('#{return_type}',\"#{question}\", [#{options.collect {|opt| "'#{opt}'" }.join(',')}]) -1")
-  end
+    def self.input(question, default)
+      ::VIM.evaluate("input(\"#{question}\", \"#{default}\")")
+    end
 
-  def self.pwd
-    VIM::evaluate('getcwd()')
-  end
+    def self.input_list(question, options, return_type = :si)
+      # s  ... Return one selected element
+      # si ... Return the index of the selected element
+      # m  ... Return a list of selected elements
+      # mi ... Return a list of indexes
+      ::VIM.evaluate("tlib#input#List('#{return_type}',\"#{question}\", [#{options.collect {|opt| "'#{opt}'" }.join(',')}]) -1")
+    end
 
-  def self.open(path)
-    VIM::command("open #{path}")
-  end
+    def self.pwd
+      ::VIM.evaluate('getcwd()')
+    end
 
-  def self.echoerr(str)
-    VIM::command("echoerr(\"#{str}\")")
-  end
+    def self.open(path)
+      ::VIM.command("open #{path}")
+    end
 
-  def self.file_readable?(path)
-    VIM::evaluate("file_readable('#{path}')") == 1
+    def self.echoerr(str)
+      ::VIM.command("echoerr(\"#{str}\")")
+    end
+
+    def self.file_readable?(path)
+      ::VIM.evaluate("file_readable('#{path}')") == 1
+    end
   end
 end

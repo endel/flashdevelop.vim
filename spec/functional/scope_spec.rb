@@ -13,11 +13,13 @@ describe FlashDevelop::Scope do
 
   it 'should identify import and package statements' do
     VIM::Buffer.load('ArrayUtil.as')
+    subject.reindex_headers!
     subject.imports.should be_empty
     subject.package.should == 'com.adobe.utils'
     subject.package_imported?('com.something.ClassName').should be_false
 
     VIM::Buffer.load('MD5.as')
+    subject.reindex_headers!
     subject.imports.should == ["com.adobe.utils.IntUtil", "flash.utils.ByteArray"]
     subject.package.should == 'com.adobe.crypto'
     subject.package_imported?('com.adobe.utils.IntUtil').should be_true
@@ -25,6 +27,7 @@ describe FlashDevelop::Scope do
     subject.package_imported?('com.adobe.utils.Something').should be_false
 
     VIM::Buffer.load('FlixelMain.as')
+    subject.reindex_headers!
     subject.imports.should == ['flash.display.BlendMode', 
                                'flash.display.Sprite',
                                'flash.geom.Matrix',

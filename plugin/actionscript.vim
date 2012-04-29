@@ -16,7 +16,5 @@ autocmd FileType actionscript setlocal shiftwidth=4
 autocmd FileType actionscript setlocal softtabstop=4
 
 "
-" ctags setting
-" NOTE: You need to copy support/ctags into your ~/.ctags to take advantage from this configuration.
-let tlist_actionscript_settings = 'actionscript;c:class;f:method;p:property;v:variable'
-
+" Utils
+autocmd BufWritePre *.as3proj :FlashDevelopConvertProject

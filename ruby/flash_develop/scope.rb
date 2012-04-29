@@ -37,7 +37,7 @@ module FlashDevelop
     end
 
     def package_imported?(full_package_path)
-      target_package = full_package_path.match(/(.*)[\.]\w*$/)[1]
+      target_package = full_package_path.match(/(.*)[\.][\w|\*]*$/)[1]
       (
         self.package == target_package ||
         @imports.include?(full_package_path) ||
@@ -55,7 +55,7 @@ module FlashDevelop
     end
 
     def cursor
-      VIM::Window.current.cursor
+      ::VIM::Window.current.cursor
     end
 
     def test_file?(test_path)

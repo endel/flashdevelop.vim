@@ -42,7 +42,7 @@ function s:FlashDevelopTryAutocomplete()
 endfunction
 
 function s:FlashDevelopConvertProject()
-  ruby $flash_develop.convert_flash_develop_project
+  ruby $flash_develop.project.try_convert!
 endfunction
 
 function s:FlashDevelopCreateNewClass()
@@ -58,11 +58,8 @@ silent! nnoremap <unique> <silent> <Leader>N :FlashDevelopNewClass<CR>
 
 " inoremap <expr><C-m> b:FlashDevelopTryAutocomplete()<CR>
 
-augroup flashdevelop
-  autocmd FileType actionscript compiler sprouts
-  autocmd FileType actionscript call s:FlashDevelopRefreshBuffer()
-  autocmd BufWritePre *.as3proj :FlashDevelopConvertProject
-augroup END
+compiler sprouts
+call s:FlashDevelopRefreshBuffer()
 
 ruby << EOF
   begin

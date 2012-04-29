@@ -33,11 +33,11 @@ begin
   # FlashDevelop
   require 'flash_develop/controller'
   require 'flash_develop/scope'
-  require 'flash_develop/project/converter'
+  require 'flash_develop/project'
 
   # Tags
-  require 'flash_develop/tags/tags.rb'
-  require 'flash_develop/tags/tag.rb'
+  require 'flash_develop/tags/tags'
+  require 'flash_develop/tags/tag'
 
   # Lexic / Parser
   require 'flash_develop/lex/word'
