@@ -1,4 +1,4 @@
-FlashDevelop features for VIM
+FlashDevelop features for VIM [![Build Status](https://secure.travis-ci.org/endel/flashdevelop.vim.png?branch=master)](http://travis-ci.org/endel/flashdevelop.vim)
 ===
 
 This plugin aims to provide productive features for editing ActionScript 3.0 files inside your VIM.
