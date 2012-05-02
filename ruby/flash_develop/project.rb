@@ -47,13 +47,13 @@ module FlashDevelop
 
     def try_convert!
       project_root = VIM::pwd
+      has_rakefile = !Dir['{rakefile.rb,rakefile}*'].first.nil?
 
-      rakefile = !Dir['rakefile.rb'].first
-      as3proj_file = Dir['*.as3proj'].first
-
-      unless rakefile
+      if !has_rakefile
+        if (project = self.identify_project_type(project_root))
+          project[:parser].parse( project[:file] )
+        end
         generate_sprout_files!(projet_root)
-        parse_as3proj(as3proj_file) if as3proj_file
       end
     end
 
@@ -61,14 +61,59 @@ module FlashDevelop
       Support::Parser.constants.each do |parser|
         klass = Support::Parser.const_get(parser)
 
-        if Dir[klass::PATTERN].first
-          # Return project type identified imediately
-          return klass.new
+        if (file = Dir[klass::PATTERN].first)
+          # Return identified file and project type immediately
+          return {
+            :file => file,
+            :parser => klass.new
+          }
         end
       end
 
       # Can't identify project type
       nil
+    end
+
+    protected
+
+    def generate_sprout_files!(project_root)
+      gem_root = Gem.loaded_specs['flashsdk'].full_gem_path
+      templates_path = File.join(gem_root, 'lib/flashsdk/generators/templates/')
+      ['Gemfile', 'rakefile.rb'].each do |file|
+        contents = open("#{templates_path}#{file}").read
+
+        if file == 'rakefile.rb'
+          template = ERB.new(contents)
+
+          # Set rakefile variables
+          class_name = @class_name
+          bin = @bin_path
+          src = @src_path
+          doc = @doc_path
+          debug_swf_name = @debug_swf_name
+          test_swf_name = @test_swf_name
+          test_runner_name = @test_runner_name
+
+          contents = template.result(binding)
+
+          # debug
+          debug_matches = contents.match(/mxmlc \"[^\"]*\" do \|t\|([\s|.|a-zA-Z\._<\"'=\/]*)end/)
+          debug_begin, debug_end = debug_matches[0].split(debug_matches[1])
+          contents.gsub!(debug_matches[0], "#{debug_begin}#{debug_matches[1].concat(self.mxmlc_options)}#{debug_end}")
+
+          # test suite
+          #test_matches = contents.match(/mxmlc \"[^\"]*\" => :asunit4 do \|t\|([\s|.|a-zA-Z\._<\"'=\/]*)end/)
+          #test_begin, test_end = test_matches[0].split(test_matches[1])
+          #contents.gsub!(test_matches[0], "#{test_begin}#{test_matches[1].concat(self.mxmlc_options)}#{test_end}")
+
+          # swc
+          #lib_regexp = /compc \"[^\"]*\" do \|t\|([\s|.|a-zA-Z\._<\"'=\/]*)end/
+          #lib_begin, lib_end = lib_matches[0].split(lib_matches[1])
+          #contents.gsub!(lib_matches[0], "#{lib_begin}#{lib_matches[1].concat(self.mxmlc_options)}#{lib_end}")
+        end
+
+        File.open("#{project_root}/#{file}", "w+") {|f| f.write(contents) }
+      end
     end
 
   end
