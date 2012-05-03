@@ -28,31 +28,26 @@ module FlashDevelop
     module Parser
 
       class FD
+        attr_reader :data
         PATTERN = '**/**.as3proj'
 
-        def build_options= options
-          options.each_pair do |name, value|
-            self.instance_variable_set(:"@#{name}", value)
-          end
-        end
-
         def parse(xml)
-          @build_options = {}
-
+          @data = {}
           root = REXML::Document.new(open(xml).read).root
 
           output_name = File.basename(root.elements['output/movie[@path]'].attribute('path').value.gsub('\\', '/'), '.swf')
-          @debug_swf_name = "#{output_name}-debug.swf"
-          @test_swf_name = "#{output_name}-test.swf"
-
-          @build_options['as3'] = true
-          @build_options['class_name'] = File.basename(root.elements['compileTargets/compile[@path]'].attribute('path').value.gsub('\\', '/'), '.as')
-          @build_options['default_size'] = "#{root.elements['output/movie[@width]'].attribute('width').value} #{root.elements['output/movie[@height]'].first.attribute('height').value}"
-          @build_options['source_path'] = root.elements['classpaths/class'].collect {|node| node.attribute('path').gsub('\\', '/') }
-          @build_options['library_path'] = root.elements['libraryPaths/element[@path]'].collect {|node| node.attribute('path').gsub('\\', '/') }
-          #@build_options['include_libraries'] = root.elements['includeLibraries/element[@path]'].collect {|node| node.attribute('path').gsub('\\', '/') }
-          #@build_options['external_library_path'] = root.elements['externalLibraryPaths/element[@path]'].collect {|node| node.attribute('path').gsub('\\', '/') }
-          #@build_options['rsl'] = root.elements['rslPaths/element[@path]'].collect {|node| node.attribute('path').gsub('\\', '/') }
+          @data[:debug_swf_name] = "#{output_name}-debug.swf"
+          @data[:test_swf_name] = "#{output_name}-test.swf"
+          @data[:build_options] = {
+            'as3' => true,
+            'class_name' => File.basename(root.elements['compileTargets/compile[@path]'].attribute('path').value.gsub('\\', '/'), '.as'),
+            'default_size' => "#{root.elements['output/movie[@width]'].attribute('width').value} #{root.elements['output/movie[@height]'].attribute('height').value}",
+            'source_path' => root.elements['classpaths/class'].collect {|node| node.attribute('path').gsub('\\', '/') },
+            #'library_path' => root.elements['libraryPaths/element[@path]'].collect {|node| node.attribute('path').gsub('\\', '/') }
+            #'include_libraries' => root.elements['includeLibraries/element[@path]'].collect {|node| node.attribute('path').gsub('\\', '/') }
+            #'external_library_path' => root.elements['externalLibraryPaths/element[@path]'].collect {|node| node.attribute('path').gsub('\\', '/') }
+            #'rsl' => root.elements['rslPaths/element[@path]'].collect {|node| node.attribute('path').gsub('\\', '/') }
+          }
 
           # Build options
           root.elements['build'].elements.each do |option|
@@ -64,18 +59,16 @@ module FlashDevelop
             next if value == 0
 
             option_name = option.attributes.first[0].gsub(/[A-Z]/, '-\0').downcase.gsub('-', '_')
-
-            puts "#{option_name} => #{value}"
-            @build_options[option_name] = value
+            @data[:build_options][option_name] = value
           end
 
-          @build_options
+          @data
         end
 
         protected
         def mxmlc_options
           rake_statements = ""
-          @build_options.each_pair do |k, value|
+          @data[:build_options].each_pair do |k, value|
             assignment = (value.kind_of?(Array)) ? '<<' : '='
             values = value.kind_of?(Array)? value : [value]
             values.each do |v|

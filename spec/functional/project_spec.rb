@@ -6,24 +6,12 @@ describe FlashDevelop::Project do
 
     it 'should identify project type' do
       type = subject.identify_project_type("spec/fixtures/sample-project/")
-      type.should be_an_instance_of(FlashDevelop::Support::Parser::FD)
+      type.should be_a_kind_of Hash
 
-      # options = subject.parse_as3proj("spec/fixtures/sample-project/rufus.as3proj")
-      # options.should be_an_instance_of(Hash)
-
-      # options['class_name'].should == 'Main'
     end
 
     it 'should generate sprout files' do
-      # options = subject.parse_as3proj("spec/fixtures/sample-project/rufus.as3proj")
-      # options.should be_an_instance_of(Hash)
-
-      # subject.build_options = options
-      # subject.class_name.should == 'Main'
-      # subject.bin_path.should == 'bin'
-      # subject.src_path.should == 'src'
-      # subject.doc_path.should == 'doc'
-      # subject.generate_sprout_files!("spec/fixtures/sample-project")
     end
+
   end
 end

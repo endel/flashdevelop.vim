@@ -50,10 +50,13 @@ module FlashDevelop
       has_rakefile = !Dir['{rakefile.rb,rakefile}*'].first.nil?
 
       if !has_rakefile
-        if (project = self.identify_project_type(project_root))
-          project[:parser].parse( project[:file] )
+        if project = self.identify_project_type(project_root)
+          parser = project[:parser]
+          parser.parse( project[:file] )
+        else
+          parser = nil
         end
-        generate_sprout_files!(projet_root)
+        generate_sprout_files!(projet_root, parser)
       end
     end
 
